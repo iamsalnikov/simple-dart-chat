@@ -80,7 +80,6 @@ class WebSocketController {
   sendMessage(String message) {
     Map data = {
       'cmd': CMD_SEND_MESSAGE,
-      'from': clientName,
       'message': message
     };
     String jdata = JSON.encode(data);
