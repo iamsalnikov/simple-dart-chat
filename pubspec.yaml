@@ -1,0 +1,7 @@
+name: simple_dart_chat
+author: Alexey Salnikov <me@iamsalnikov.ru>
+homepage: dartchat.iamsalnikov.ru
+description: Simple dart chat with websockets
+dependencies:
+  browser: any
+  route: any
