@@ -76,7 +76,7 @@ class Server {
   }
   
   listenWs(WebSocket webSocket) {
-    String connectionName = 'User $generalCount';
+    String connectionName = 'user_$generalCount';
     generalCount++;
     
     connections.putIfAbsent(connectionName, () => webSocket);
@@ -137,7 +137,8 @@ class Server {
     Map<String, String> data = {
       'cmd': cmd,
       'from': from,
-      'message': message
+      'message': message,
+      'online': connections.length
     };
     
     return JSON.encode(data);
