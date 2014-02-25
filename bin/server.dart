@@ -88,7 +88,7 @@ class Server {
           sendNick(connectionName);
           notifyAbout(connectionName, '$connectionName joined the chat');
         } else if (json['cmd'] == CMD_SEND_MESSAGE) {
-          sendMessage(json['from'], json['message']);
+          sendMessage(connectionName, json['message']);
         }
       }).onDone(() {
         closeConnection(connectionName);
