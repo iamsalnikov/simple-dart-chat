@@ -70,7 +70,6 @@ class Server {
   bindRouter() {
     _router = new Router(_server);
     
-    // TODO: websocket handler
     _router.serve('/')
       .transform(new WebSocketTransformer())
       .listen(this.listenWs);
