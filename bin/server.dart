@@ -42,10 +42,10 @@ class Server {
    * param [address]
    * param [port]
    */
-  Server({
-    this.address: '127.0.0.1', 
-    this.port: 9223
-  });
+  Server([
+    this.address = '127.0.0.1', 
+    this.port = 9223
+  ]);
   
   /**
    * Bind the server
@@ -156,6 +156,6 @@ class Server {
 }
 
 main() {
-  Server server = new Server();
+  Server server = new Server(ADDRESS, PORT);
   server.bind();
 }
