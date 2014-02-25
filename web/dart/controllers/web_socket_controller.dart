@@ -9,11 +9,13 @@ class WebSocketController {
   WebSocket ws;
   HtmlElement output;
   TextAreaElement userInput;
+  DivElement online;
   String clientName;
   
-  WebSocketController(String connectTo, String outputSelector, String inputSelector) {
+  WebSocketController(String connectTo, String outputSelector, String inputSelector, String onlineSelector) {
     output = querySelector(outputSelector);
     userInput = querySelector(inputSelector);
+    online = querySelector(onlineSelector);
     
     ws = new WebSocket(connectTo);
     
@@ -46,6 +48,8 @@ class WebSocketController {
   processMessage(String message) {
     var data = JSON.decode(message);
     
+    showOnline(data['online']);
+    
     if (data['cmd'] == CMD_INIT_CLIENT) {
       clientName = data['message'];
       bindSending();
@@ -75,6 +79,10 @@ class WebSocketController {
     if (scroll) {
       msgElement.scrollIntoView();
     }
+  }
+  
+  showOnline(int count) {
+    online.text = 'online: $count';
   }
   
   sendMessage(String message) {
