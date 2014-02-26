@@ -50,8 +50,10 @@ html, body {
   line-height: 22px;
 }
 
-/** Online **/
-.chat > #online {
+/** Online, GitStar **/
+.chat > #online,
+.chat > #gitStar
+ {
   position: absolute;
   right: 500px;
   background: rgb(148, 148, 148);
@@ -61,4 +63,12 @@ html, body {
   border-top-left-radius: 2px;
   border-bottom-left-radius: 2px;
   width: 70px;
+}
+
+.chat > #gitStar {
+  bottom: 65px;
+}
+
+.chat > #gitStar > iframe {
+  margin-bottom: -13px;
 }
