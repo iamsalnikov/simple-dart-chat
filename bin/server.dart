@@ -114,6 +114,7 @@ class Server {
           connections[user].add(jdata);
         }
       });
+      connections[from].add(jdata);
     } else {
       connections.forEach((username, conn) {
         conn.add(jdata);
