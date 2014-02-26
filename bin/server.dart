@@ -101,9 +101,25 @@ class Server {
    */
   sendMessage(String from, String message) {
     String jdata = buildMessage(CMD_SEND_MESSAGE, from, message);
-    connections.forEach((username, conn) {
-      conn.add(jdata);
-    });
+    
+    // search users that the message is intended
+    RegExp usersReg = new RegExp(r"@([\w|\d]+)");
+    Iterable<Match> users = usersReg.allMatches(message);
+    
+    // if users found - send message only them
+    if (users.isNotEmpty) {
+      users.forEach((Match match) {
+        String user = match.group(0).replaceFirst('@', '');
+        if (connections.containsKey(user)) {
+          connections[user].add(jdata);
+        }
+      });
+    } else {
+      connections.forEach((username, conn) {
+        conn.add(jdata);
+      });
+    }
+    
   }
   
   /**
