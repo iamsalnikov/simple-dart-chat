@@ -1,10 +1,4 @@
-library simple_dart_chat.server;
-
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-import 'package:route/server.dart' show Router;
-import './../common/common.dart';
+part of simplechat.bin;
 
 /**
  * Class [Server] implement simple server chat
@@ -44,7 +38,7 @@ class Server {
    */
   Server([
     this.address = '127.0.0.1', 
-    this.port = 9223
+    this.port = 9224
   ]);
   
   /**
@@ -77,7 +71,7 @@ class Server {
   
   listenWs(WebSocket webSocket) {
     String connectionName = 'user_$generalCount';
-    generalCount++;
+    ++generalCount;
     
     connections.putIfAbsent(connectionName, () => webSocket);
     
@@ -139,12 +133,12 @@ class Server {
    */
   notifyAbout(String connectionName, String message) {
     String jdata = buildMessage(CMD_SEND_MESSAGE, SYSTEM_CLIENT, message);
-    
-    connections.forEach((username, conn) {
-      if (username != connectionName) {
-        conn.add(jdata);
-      }
-    });
+
+    connections.keys
+      .where((String name) => name != connectionName)
+      .forEach((String name) {
+        connections[name].add(jdata);
+      });
   }
   
   /**
@@ -170,9 +164,4 @@ class Server {
     }
   }
   
-}
-
-main() {
-  Server server = new Server(ADDRESS, PORT);
-  server.bind();
 }
