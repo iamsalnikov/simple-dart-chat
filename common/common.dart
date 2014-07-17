@@ -1,10 +1,8 @@
-library simple_dart_chat.common;
+library simplechat.common;
 
-final String ADDRESS = '127.0.0.1';
-final int PORT = 9224;
+const String ADDRESS = '127.0.0.1';
+const int PORT = 9224;
 
-final String CMD_INIT_CLIENT = 'initClient';
-final String CMD_SEND_MESSAGE = 'sendMessage';
-final String CMD_NEW_CLIENT_CONNECTED = 'newClientConnected';
+const String CMD_SEND_MESSAGE = 'sendMessage';
 
-final String SYSTEM_CLIENT = 'Simple Chat';
+const String SYSTEM_CLIENT = 'Simple Chat';

@@ -74,14 +74,12 @@ class Server {
     ++generalCount;
     
     connections.putIfAbsent(connectionName, () => webSocket);
+    notifyAbout(connectionName, '$connectionName joined the chat');
     
     webSocket
       .map((string) => JSON.decode(string))
       .listen((json) {
-        if (json['cmd'] == CMD_INIT_CLIENT) {
-          sendNick(connectionName);
-          notifyAbout(connectionName, '$connectionName joined the chat');
-        } else if (json['cmd'] == CMD_SEND_MESSAGE) {
+        if (json['cmd'] == CMD_SEND_MESSAGE) {
           sendMessage(connectionName, json['message']);
         }
       }).onDone(() {
@@ -115,20 +113,9 @@ class Server {
       });
     }
   }
-  
+
   /**
-   * Send nick to new client
-   */
-  sendNick(String connectionName) {
-    String jdata = buildMessage(CMD_INIT_CLIENT, SYSTEM_CLIENT, connectionName);
-    
-    if (connections.containsKey(connectionName)) {
-      send(connectionName, jdata);
-    }    
-  }
-  
-  /**
-   * Notify all users about new connection
+   * Notify users
    */
   notifyAbout(String connectionName, String message) {
     String jdata = buildMessage(CMD_SEND_MESSAGE, SYSTEM_CLIENT, message);
