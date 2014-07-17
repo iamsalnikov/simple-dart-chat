@@ -1,9 +1,4 @@
-library simple_dart_chat.client.controllers;
-
-import 'dart:html';
-import 'dart:convert';
-import './../views/message_view.dart';
-import './../../../common/common.dart';
+part of  simplechat.client;
 
 class WebSocketController {  
   WebSocket ws;
