@@ -10,7 +10,6 @@ class WebSocketController {
   HtmlElement output;
   TextAreaElement userInput;
   DivElement online;
-  String clientName;
   
   WebSocketController(String connectTo, String outputSelector, String inputSelector, String onlineSelector) {
     output = querySelector(outputSelector);
@@ -21,7 +20,7 @@ class WebSocketController {
     
     ws.onOpen.listen((e){
       showMessage('Сonnection is established', SYSTEM_CLIENT);
-      initClient();
+      bindSending();
     });
     
     ws.onClose.listen((e) {
@@ -37,26 +36,11 @@ class WebSocketController {
     });
   }
   
-  initClient() {
-    Map data = {
-      'cmd': CMD_INIT_CLIENT
-    };
-    String jdata = JSON.encode(data);
-    ws.send(jdata);
-  }
-  
   processMessage(String message) {
     var data = JSON.decode(message);
     
     showOnline(data['online']);
-    
-    if (data['cmd'] == CMD_INIT_CLIENT) {
-      clientName = data['message'];
-      bindSending();
-    } else {
-      showMessage(data['message'], data['from']);
-    }  
-    
+    showMessage(data['message'], data['from']);
   }
   
   bindSending() {
