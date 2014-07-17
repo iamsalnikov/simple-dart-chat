@@ -75,6 +75,7 @@ class Server {
     
     connections.putIfAbsent(connectionName, () => webSocket);
     notifyAbout(connectionName, '$connectionName joined the chat');
+    sendWelcome(connectionName);
     
     webSocket
       .map((string) => JSON.decode(string))
@@ -123,6 +124,15 @@ class Server {
       .forEach((String name) {
         send(name, jdata);
       });
+  }
+
+  /**
+   * Sending welcome message to new client
+   */
+  void sendWelcome(String connectionName) {
+    String jdata = buildMessage(SYSTEM_CLIENT, 'Welcome to chat!');
+
+    send(connectionName, jdata);
   }
 
   /**
