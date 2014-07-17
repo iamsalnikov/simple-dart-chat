@@ -1,7 +1,7 @@
 part of simplechat.bin;
 
 /**
- * Class [Server] implement simple server chat
+ * Class [Server] implement simple chat server
  */
 class Server {
   /**
@@ -105,16 +105,15 @@ class Server {
       users.forEach((Match match) {
         String user = match.group(0).replaceFirst('@', '');
         if (connections.containsKey(user)) {
-          connections[user].add(jdata);
+          send(user, jdata);
         }
       });
-      connections[from].add(jdata);
+      send(from, jdata);
     } else {
       connections.forEach((username, conn) {
         conn.add(jdata);
       });
     }
-    
   }
   
   /**
@@ -124,7 +123,7 @@ class Server {
     String jdata = buildMessage(CMD_INIT_CLIENT, SYSTEM_CLIENT, connectionName);
     
     if (connections.containsKey(connectionName)) {
-      connections[connectionName].add(jdata);
+      send(connectionName, jdata);
     }    
   }
   
@@ -137,8 +136,15 @@ class Server {
     connections.keys
       .where((String name) => name != connectionName)
       .forEach((String name) {
-        connections[name].add(jdata);
+        send(name, jdata);
       });
+  }
+
+  /**
+   * Sending message
+   */
+  void send(String to, String message) {
+    connections[to].add(message);
   }
   
   /**
