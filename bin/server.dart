@@ -66,10 +66,10 @@ class Server {
     
     _router.serve('/')
       .transform(new WebSocketTransformer())
-      .listen(this.listenWs);
+      .listen(this.createWs);
   }
-  
-  listenWs(WebSocket webSocket) {
+
+  createWs(WebSocket webSocket) {
     String connectionName = 'user_$generalCount';
     ++generalCount;
     
