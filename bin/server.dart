@@ -79,9 +79,7 @@ class Server {
     webSocket
       .map((string) => JSON.decode(string))
       .listen((json) {
-        if (json['cmd'] == CMD_SEND_MESSAGE) {
-          sendMessage(connectionName, json['message']);
-        }
+        sendMessage(connectionName, json['message']);
       }).onDone(() {
         closeConnection(connectionName);
         notifyAbout(connectionName, '$connectionName logs out chat');
@@ -92,7 +90,7 @@ class Server {
    * Sending message to all client
    */
   sendMessage(String from, String message) {
-    String jdata = buildMessage(CMD_SEND_MESSAGE, from, message);
+    String jdata = buildMessage(from, message);
     
     // search users that the message is intended
     RegExp usersReg = new RegExp(r"@([\w|\d]+)");
@@ -118,7 +116,7 @@ class Server {
    * Notify users
    */
   notifyAbout(String connectionName, String message) {
-    String jdata = buildMessage(CMD_SEND_MESSAGE, SYSTEM_CLIENT, message);
+    String jdata = buildMessage(SYSTEM_CLIENT, message);
 
     connections.keys
       .where((String name) => name != connectionName)
@@ -137,9 +135,8 @@ class Server {
   /**
    * Build message
    */
-  String buildMessage(String cmd, String from, String message) {
+  String buildMessage(String from, String message) {
     Map<String, String> data = {
-      'cmd': cmd,
       'from': from,
       'message': message,
       'online': connections.length
