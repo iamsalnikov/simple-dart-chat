@@ -1,13 +1,7 @@
-library simple_dart_chat.server;
-
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-import 'package:route/server.dart' show Router;
-import './../common/common.dart';
+part of simplechat.bin;
 
 /**
- * Class [Server] implement simple server chat
+ * Class [Server] implement simple chat server
  */
 class Server {
   /**
@@ -44,7 +38,7 @@ class Server {
    */
   Server([
     this.address = '127.0.0.1', 
-    this.port = 9223
+    this.port = 9224
   ]);
   
   /**
@@ -72,24 +66,21 @@ class Server {
     
     _router.serve('/')
       .transform(new WebSocketTransformer())
-      .listen(this.listenWs);
+      .listen(this.createWs);
   }
-  
-  listenWs(WebSocket webSocket) {
+
+  createWs(WebSocket webSocket) {
     String connectionName = 'user_$generalCount';
-    generalCount++;
+    ++generalCount;
     
     connections.putIfAbsent(connectionName, () => webSocket);
+    notifyAbout(connectionName, '$connectionName joined the chat');
+    sendWelcome(connectionName);
     
     webSocket
       .map((string) => JSON.decode(string))
       .listen((json) {
-        if (json['cmd'] == CMD_INIT_CLIENT) {
-          sendNick(connectionName);
-          notifyAbout(connectionName, '$connectionName joined the chat');
-        } else if (json['cmd'] == CMD_SEND_MESSAGE) {
-          sendMessage(connectionName, json['message']);
-        }
+        sendMessage(connectionName, json['message']);
       }).onDone(() {
         closeConnection(connectionName);
         notifyAbout(connectionName, '$connectionName logs out chat');
@@ -100,7 +91,7 @@ class Server {
    * Sending message to all client
    */
   sendMessage(String from, String message) {
-    String jdata = buildMessage(CMD_SEND_MESSAGE, from, message);
+    String jdata = buildMessage(from, message);
     
     // search users that the message is intended
     RegExp usersReg = new RegExp(r"@([\w|\d]+)");
@@ -111,48 +102,51 @@ class Server {
       users.forEach((Match match) {
         String user = match.group(0).replaceFirst('@', '');
         if (connections.containsKey(user)) {
-          connections[user].add(jdata);
+          send(user, jdata);
         }
       });
-      connections[from].add(jdata);
+      send(from, jdata);
     } else {
       connections.forEach((username, conn) {
         conn.add(jdata);
       });
     }
-    
   }
-  
+
   /**
-   * Send nick to new client
-   */
-  sendNick(String connectionName) {
-    String jdata = buildMessage(CMD_INIT_CLIENT, SYSTEM_CLIENT, connectionName);
-    
-    if (connections.containsKey(connectionName)) {
-      connections[connectionName].add(jdata);
-    }    
-  }
-  
-  /**
-   * Notify all users about new connection
+   * Notify users
    */
   notifyAbout(String connectionName, String message) {
-    String jdata = buildMessage(CMD_SEND_MESSAGE, SYSTEM_CLIENT, message);
-    
-    connections.forEach((username, conn) {
-      if (username != connectionName) {
-        conn.add(jdata);
-      }
-    });
+    String jdata = buildMessage(SYSTEM_CLIENT, message);
+
+    connections.keys
+      .where((String name) => name != connectionName)
+      .forEach((String name) {
+        send(name, jdata);
+      });
+  }
+
+  /**
+   * Sending welcome message to new client
+   */
+  void sendWelcome(String connectionName) {
+    String jdata = buildMessage(SYSTEM_CLIENT, 'Welcome to chat!');
+
+    send(connectionName, jdata);
+  }
+
+  /**
+   * Sending message
+   */
+  void send(String to, String message) {
+    connections[to].add(message);
   }
   
   /**
    * Build message
    */
-  String buildMessage(String cmd, String from, String message) {
+  String buildMessage(String from, String message) {
     Map<String, String> data = {
-      'cmd': cmd,
       'from': from,
       'message': message,
       'online': connections.length
@@ -170,9 +164,4 @@ class Server {
     }
   }
   
-}
-
-main() {
-  Server server = new Server(ADDRESS, PORT);
-  server.bind();
 }

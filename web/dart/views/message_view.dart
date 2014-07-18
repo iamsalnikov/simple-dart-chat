@@ -1,6 +1,4 @@
-library simple_dart_chat.client.views;
-
-import "dart:html";
+part of simplechat.client;
 
 class MessageView {
   
