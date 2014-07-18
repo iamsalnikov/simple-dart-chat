@@ -4,7 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:route/server.dart' show Router;
-import './../common/common.dart';
+import 'package:simplechat.common/common.dart';
 
 part 'server.dart';
 

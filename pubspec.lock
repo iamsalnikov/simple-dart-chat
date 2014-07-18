@@ -4,11 +4,11 @@ packages:
   browser:
     description: browser
     source: hosted
-    version: "0.9.1"
+    version: "0.10.0+2"
   collection:
     description: collection
     source: hosted
-    version: "0.9.1"
+    version: "0.9.4"
   logging:
     description: logging
     source: hosted
@@ -17,3 +17,9 @@ packages:
     description: route
     source: hosted
     version: "0.4.6"
+  "simplechat.common":
+    description:
+      path: common
+      relative: true
+    source: path
+    version: "0.0.0"

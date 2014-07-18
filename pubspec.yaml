@@ -5,3 +5,5 @@ description: Simple dart chat with websockets
 dependencies:
   browser: any
   route: any
+  simplechat.common:
+    path: ./common
