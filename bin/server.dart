@@ -65,6 +65,7 @@ class Server {
     _router = new Router(_server);
     
     _router.serve('/')
+      .where((HttpRequest request) => WebSocketTransformer.isUpgradeRequest(request))
       .transform(new WebSocketTransformer())
       .listen(this.createWs);
   }
