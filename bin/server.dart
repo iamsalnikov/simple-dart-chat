@@ -5,7 +5,7 @@ part of simplechat.bin;
  */
 class Server {
   /**
-   * Server bing port
+   * Server bind port
    */
   int port;
   
