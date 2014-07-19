@@ -5,7 +5,7 @@ part of simplechat.bin;
  */
 class Server {
   /**
-   * Server bing port
+   * Server bind port
    */
   int port;
   
@@ -65,6 +65,7 @@ class Server {
     _router = new Router(_server);
     
     _router.serve('/')
+      .where((HttpRequest request) => WebSocketTransformer.isUpgradeRequest(request))
       .transform(new WebSocketTransformer())
       .listen(this.createWs);
   }
